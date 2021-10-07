@@ -17,3 +17,5 @@ class State:
         self.board = board
         self.players = players
         self.round = round
+
+        
