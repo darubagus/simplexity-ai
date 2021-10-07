@@ -74,11 +74,12 @@ def check_streak(board: Board, row: int, col: int) -> Tuple[str, str, str]:
                 if is_out(board, row_, col_):
                     mark = 0
                     break
-
+                #Cek shape yg tidak sesuai
                 shape_condition = (
                     prior == GameConstant.SHAPE
                     and piece.shape != board[row_, col_].shape
                 )
+                #Cek color yg tidak sesuai
                 color_condition = (
                     prior == GameConstant.COLOR
                     and piece.color != board[row_, col_].color
@@ -91,6 +92,7 @@ def check_streak(board: Board, row: int, col: int) -> Tuple[str, str, str]:
                 col_ += col_ax
                 mark += 1
 
+            #Ngecek ada yg mau streak 4 apa engga
             if mark == GameConstant.N_COMPONENT_STREAK - 1:
                 player_set = [
                     (GameConstant.PLAYER1_SHAPE, GameConstant.PLAYER1_COLOR),
