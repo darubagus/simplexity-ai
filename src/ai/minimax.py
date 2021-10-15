@@ -3,6 +3,7 @@ from time import time
 
 from src.constant import ShapeConstant
 from src.model import State
+from src.ai.objective import *
 
 from typing import Tuple, List
 
@@ -15,5 +16,6 @@ class Minimax:
         self.thinking_time = time() + thinking_time
 
         best_movement = (random.randint(0, state.board.col), random.choice([ShapeConstant.CROSS, ShapeConstant.CIRCLE])) #minimax algorithm
+        print("obj: " + str(objective(state)))
 
         return best_movement

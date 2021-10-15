@@ -3,6 +3,7 @@ import argparse
 from src.model import Config
 from src.constant import GameConstant, Path
 from src.mechanic import Game
+from src.test3 import Test3
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

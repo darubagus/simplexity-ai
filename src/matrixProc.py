@@ -12,7 +12,7 @@ def rollingWindow(a, window_size):
     strides = (a.strides[0],) + a.strides
     return np.lib.stride_tricks.as_strided(a, shape=shape, strides=strides)
 
-def splitHV(a):
+def runSplitHV(a):
     print("Baris")
     result = []
     for row in a:
@@ -39,8 +39,8 @@ def runSplitDiagonal(a):
     flipped = np.fliplr(a)
     return splitDiagonal(a) + splitDiagonal(flipped)
 
-splitHV(matrix)
-runSplitDiagonal(matrix)
+runSplitHV(matrix)
+print(runSplitDiagonal(matrix))
 
 stop = timeit.default_timer()
 print('Time: ', stop - start)  
