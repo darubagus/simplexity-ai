@@ -15,15 +15,9 @@ class Minimax:
         pass
 
     def find(self, state: State, n_player: int, thinking_time: float):
-        # -> Tuple[str, str]
-        print(state.players[n_player].color, state.players[n_player].shape)
-
         self.thinking_time = time() + thinking_time
 
-        best_movement = (random.randint(0, state.board.col), random.choice([ShapeConstant.CROSS, ShapeConstant.CIRCLE])) #minimax algorithm
-        # print("obj: " + str(objective(state)))
         result = self.minimax(state, 3, float("-inf"), float("inf"), True)
-        # print("THIS DOWN HERE")
         best_movement = (result[1][0], result[1][1])
         print(best_movement)
 
