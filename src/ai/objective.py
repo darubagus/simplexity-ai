@@ -16,7 +16,7 @@ def objective(_state : State):
     arrays = []
     states = {}
 
-    player = _state.players[(_state.round - 1) % 2]
+    player = _state.players[(_state.round) % 2]
     board = np.array(_state.board.board)
     arrays += runSplitHV(board)
     arrays += runSplitDiagonal(board)
@@ -61,12 +61,12 @@ def countStateValue(_state, _player):
     valid_shapes = ["X", "O"]
     weights = {
         "SHAPE1":1,
-        "SHAPE2":2,
-        "SHAPE3":3,
+        "SHAPE2":3,
+        "SHAPE3":6,
         "SHAPE4": 1000,
         "COLOR1":0.5,
-        "COLOR2":1.5,
-        "COLOR3":2.5,
+        "COLOR2":2.5,
+        "COLOR3":5.5,
         "COLOR4": 1000 }
     player_shape = _player.shape
     player_color = _player.color
@@ -77,7 +77,7 @@ def countStateValue(_state, _player):
             cweight = str(key[-1])
             weight_key = "COLOR" + cweight
 
-            if (player_color == "RED"):
+            if (player_color == "BLUE"):
                 if ("BLUE" + cweight) not in _state:
                     total += weights[weight_key] * (0 - _state["RED" + cweight])
                 elif ("RED" + cweight) not in _state:
@@ -96,7 +96,7 @@ def countStateValue(_state, _player):
             cweight = str(key[-1])
             weight_key = "SHAPE" + cweight
 
-            if (player_shape == "O"):
+            if (player_shape == "X"):
                 if ("X" + cweight) not in _state:
                     total += weights[weight_key] * (0 - _state["O" + cweight])
                 elif ("O" + cweight) not in _state:

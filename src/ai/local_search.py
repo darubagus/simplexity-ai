@@ -53,24 +53,32 @@ class LocalSearch:
         return arrOfSuccStates      
 
     def sidewaysHillClimb(self, state: State):
-        boardCp = Board(state.board.row, state.board.col)
-        boardCp.board = copy.deepcopy(state.board.board)
-        playersCp = copy.deepcopy(state.players)
-        stateCp = State(boardCp, playersCp, state.round)
-
-        successorStates = self.generatePossibleMoves(stateCp)
-
         maxScore = objective(state)
-        neighbor = copy.deepcopy(state)
-        bestMove = random.randint(0, state.board.col), random.choice([ShapeConstant.CROSS, ShapeConstant.CIRCLE])
+        neighbor = (copy.deepcopy(state), random.randint(0, state.board.col), random.choice([ShapeConstant.CROSS, ShapeConstant.CIRCLE]))
+        backupNeighbor = (copy.deepcopy(state), random.randint(0, state.board.col), random.choice([ShapeConstant.CROSS, ShapeConstant.CIRCLE]))
+        nonCurrentHighest = float("-inf")
+        bestMove = ()
 
-        for succState in successorStates:
-            currentScore = objective(succState[0])
+        successors = self.generatePossibleMoves(state)
+
+        for successor in successors:
+            currentScore = objective(successor[0])
             if (maxScore <= currentScore):
                 maxScore = currentScore
-                neighbor = succState
-                bestMove = (succState[1], succState[2])
+                neighbor = successor
+            
+            if (currentScore >= nonCurrentHighest):
+                nonCurrentHighest = currentScore
+                backupNeighbor = successor
 
-        return (maxScore, bestMove)
+        if (nonCurrentHighest == maxScore):
+            return (maxScore, (neighbor[1], neighbor[2]))
+        else:
+            return (nonCurrentHighest, (backupNeighbor[1], backupNeighbor[2]))
+
+
+            
+            
+        
 
         
