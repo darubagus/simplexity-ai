@@ -31,22 +31,29 @@ def checkWindow(_window, _states):
     shapes = ["X", "O", "-"]
     for color in colors:
         counter = 0
+        counter_blank = 0
         for cell in _window:
-            if (cell.color == color):
+            if (cell.color == color and cell.color != "BLACK"):
                 counter += 1
+            if (cell.color == "BLACK"):
+                counter_blank += 1
         if (color+str(counter)) not in _states:
             _states[color+str(counter)] = 0
-        # print(color+str(counter))
-        _states[color+str(counter)] += 1
+        if (counter + counter_blank == 4):
+            _states[color+str(counter)] += 1
 
     for shape in shapes:
         counter = 0
+        counter_blank = 0
         for cell in _window:
-            if (cell.shape == shape):
+            if (cell.shape == shape and cell.shape != "-"):
                 counter += 1
+            if (cell.shape == "-"):
+                counter_blank += 1
         if (shape+str(counter)) not in _states:
             _states[shape+str(counter)] = 0
-        _states[shape+str(counter)] += 1
+        if (counter + counter_blank == 4):
+            _states[shape+str(counter)] += 1
     # print(_states)
 
 def countStateValue(_state, _player):
@@ -56,9 +63,11 @@ def countStateValue(_state, _player):
         "SHAPE1":1,
         "SHAPE2":2,
         "SHAPE3":3,
+        "SHAPE4": 1000,
         "COLOR1":0.5,
         "COLOR2":1.5,
-        "COLOR3":2.5 }
+        "COLOR3":2.5,
+        "COLOR4": 1000 }
     player_shape = _player.shape
     player_color = _player.color
     total = 0
@@ -68,7 +77,7 @@ def countStateValue(_state, _player):
             cweight = str(key[-1])
             weight_key = "COLOR" + cweight
 
-            if (player_color == "BLUE"):
+            if (player_color == "RED"):
                 if ("BLUE" + cweight) not in _state:
                     total += weights[weight_key] * (0 - _state["RED" + cweight])
                 elif ("RED" + cweight) not in _state:
@@ -87,7 +96,7 @@ def countStateValue(_state, _player):
             cweight = str(key[-1])
             weight_key = "SHAPE" + cweight
 
-            if (player_shape == "X"):
+            if (player_shape == "O"):
                 if ("X" + cweight) not in _state:
                     total += weights[weight_key] * (0 - _state["O" + cweight])
                 elif ("O" + cweight) not in _state:
@@ -101,7 +110,7 @@ def countStateValue(_state, _player):
                     total += weights[weight_key] * (_state["O" + cweight])
                 else:
                     total += weights[weight_key] * (_state["O" + cweight] - _state["X" + cweight])
-    print(_state)
+    # print(_state)
     return total
     
 # print(np.array(board))

@@ -1,7 +1,7 @@
 import pickle
 from time import time
 
-from src.ai import Minimax
+from src.ai import Minimax, LocalSearch
 from src.model import Board, Player, State, Config
 from src.constant import ShapeConstant, GameConstant, Path
 from src.utility import is_out, is_win, is_full, place
@@ -45,7 +45,7 @@ class Game:
             if not self.config.is_dump:
                 # You can change model used here
                 model1 = Minimax()
-                model2 = Minimax()
+                model2 = LocalSearch()
             else:
                 # Don't change this
                 model1 = pickle.load(open(Path.BVB_P1, "rb"))
@@ -100,7 +100,8 @@ class Game:
                 choosen_col, choosen_shape = self.bot[player_turn].find(
                     self.state, player_turn, self.config.thinking_time
                 )
-                print(f'Runtime: {time() - start}')
+                print(choosen_col, choosen_shape)
+                print(f'Round {self.state.round} runtime: {time() - start}')
 
             
             if self.__is_valid(choosen_col, choosen_shape):
@@ -120,6 +121,7 @@ class Game:
             for k, v in self.state.players[player].quota.items():
                 print(f'\tShape "{k}": {v}')
             placement = self.__placement(player)
+            print(placement)
 
             while placement == -1:
                 print(self.state.board)
