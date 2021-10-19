@@ -111,7 +111,7 @@ def countStateValue(_state, _player):
                     total += weights[weight_key] * (_state["O" + cweight])
                 else:
                     total += weights[weight_key] * (_state["O" + cweight] - _state["X" + cweight])
-    print(_state)
+    print(_state, total)
     return total
     
 # print(np.array(board))
