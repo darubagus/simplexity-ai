@@ -18,6 +18,7 @@ class Minimax:
         self.thinking_time = time() + thinking_time
 
         result = self.minimax(state, 3, float("-inf"), float("inf"), True)
+        
         best_movement = (result[1][0], result[1][1])
         print(result[0])
         print(best_movement)

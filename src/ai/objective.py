@@ -20,7 +20,7 @@ def objective(_state : State):
     board = np.array(_state.board.board)
     arrays += runSplitHV(board)
     arrays += runSplitDiagonal(board)
-    print(len(arrays))
+    # print(len(arrays))
 
     for window in arrays:
         checkWindow(window, states)
