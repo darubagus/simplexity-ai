@@ -49,7 +49,8 @@ class LocalSearch:
                 placementSucc = place(stateCp, currentPlayer, "O", i)
                 if (placementSucc != -1):
                     arrOfSuccStates.append((stateCp, i, ShapeConstant.CIRCLE))
-       
+        if (state.players[currentPlayer].shape == "X"):
+            arrOfSuccStates = arrOfSuccStates[::-1]
         return arrOfSuccStates      
 
     def sidewaysHillClimb(self, state: State):

@@ -5,7 +5,7 @@ import timeit
 start = timeit.default_timer()
 
 matrix = np.arange(42).reshape(6, 7)
-# print(matrix)
+print(matrix)
 
 def rollingWindow(a, window_size):
     shape = (a.shape[0] - window_size + 1, window_size) + a.shape[1:]
@@ -38,10 +38,10 @@ def splitDiagonal(a):
 
 def runSplitDiagonal(a):
     flipped = np.fliplr(a)
-    return splitDiagonal(a) + splitDiagonal(flipped)
+    return (splitDiagonal(a) + splitDiagonal(flipped))
 
-# runSplitHV(matrix)
-# # print(runSplitDiagonal(matrix))
+runSplitHV(matrix)
+runSplitDiagonal(matrix)
 
 # stop = timeit.default_timer()
 # # print('Time: ', stop - start)  

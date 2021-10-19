@@ -25,7 +25,7 @@ class Minimax:
         return best_movement
 
     def generatePossibleMoves(self, state: State):
-        currentPlayer = (state.round - 1) % 2
+        currentPlayer = (state.round-1) % 2
         xValidity = state.players[currentPlayer].quota["X"] > 0
         oValidity = state.players[currentPlayer].quota["O"] > 0
 
@@ -51,7 +51,10 @@ class Minimax:
                 placementSucc = place(stateCp, currentPlayer, "O", i)
                 if (placementSucc != -1):
                     arrOfSuccStates.append((stateCp, i, ShapeConstant.CIRCLE))
-       
+
+        if (state.players[currentPlayer].shape == "X"):
+            arrOfSuccStates = arrOfSuccStates[::-1]
+
         return arrOfSuccStates        
 
     def minimax(self, state: State, depth: int, alpha: int, beta: int, maximizing: bool):
