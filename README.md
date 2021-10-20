@@ -45,4 +45,8 @@ You can change the config in run.bat
 ```
 
 ## ✔️ Acknowledgement
+Daru Bagus Dananjaya    13519080
+Stefanus                13519101
+Shifa Salsabiila        13519106
+Rayhan Asadel           13519196
 This project is used for an assignment from IF3170 Artificial Intelligence 2021/2022
