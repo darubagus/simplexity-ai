@@ -1,15 +1,16 @@
 import pickle
 import timeit
+import numpy as np
 from typing import Tuple
 from src.model import Player
 from src.model import Piece, Board, State
 from src.constant import ShapeConstant, GameConstant, ColorConstant
-from src.matrixProc import *
+# from src.matrixProc import *
 
 #INI BUAT TESTING
 board = Board(6, 7)
         
-def objective(_state : State):
+def objective(_state : State, n_player: int):
     """
     
     """
@@ -17,7 +18,7 @@ def objective(_state : State):
     arrays = []
     states = {}
 
-    player = _state.players[(_state.round) % 2]
+    player = _state.players[n_player]
 
     board = np.array(_state.board.board)
     arrays += runSplitHV(board)
@@ -75,11 +76,11 @@ def countStateValue(_state, _player):
         "SHAPE1":5,
         "SHAPE2":10,
         "SHAPE3":30,
-        "SHAPE4":1000,
+        "SHAPE4":100,
         "COLOR1":1,
         "COLOR2":7,
         "COLOR3":20,
-        "COLOR4":1000}
+        "COLOR4":100 }
     player_shape = _player.shape
     player_color = _player.color
     total = 0
@@ -128,6 +129,61 @@ def countStateValue(_state, _player):
 
     print(_state, total)
     return (total, end)
+
+#Your statements here
+# start = timeit.default_timer()
+
+# matrix = np.arange(42).reshape(6, 7)
+# print(matrix)
+
+def rollingWindow(a, window_size):
+    shape = (a.shape[0] - window_size + 1, window_size) + a.shape[1:]
+    strides = (a.strides[0],) + a.strides
+    return np.lib.stride_tricks.as_strided(a, shape=shape, strides=strides)
+
+def runSplitHV(a):
+    result = []
+    x = a.transpose()
+    # for row in a:
+    #     temp = rollingWindow(row, 4)
+    #     for group in temp: result.append(group)
+
     
-# print(np.array(board))
+
+    # for row in x:
+    #     temp = rollingWindow(row, 4)
+    #     for group in temp: result.append(group)
+
+    for i in range(len(a)):
+        tempA = rollingWindow(a[i], 4)
+        for groupA in tempA: result.append(groupA)
+
+        tempX = rollingWindow(x[i], 4)
+        for groupX in tempX: result.append(groupX)
+    return result
+
+def splitDiagonal(a):
+    # print("Diagonal")
+    result = []
+    for i in range(-3, 4):
+        diagonal = np.diagonal(a, offset=i)
+        if (len(diagonal) >= 4):
+            temp = rollingWindow(diagonal, 4)
+            for group in temp: result.append(group)
+    # print("Len diagonal: " + str(len(result)))
+    return result
+
+def runSplitDiagonal(a):
+    flipped = np.fliplr(a)
+    return (splitDiagonal(a) + splitDiagonal(flipped))
+
+# runSplitHV(matrix)
+# runSplitDiagonal(matrix)
+
+# stop = timeit.default_timer()
+# # print('Time: ', stop - start)  
+
+
+    
+
 
