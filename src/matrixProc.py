@@ -14,15 +14,23 @@ def rollingWindow(a, window_size):
 
 def runSplitHV(a):
     result = []
-    for row in a:
-        temp = rollingWindow(row, 4)
-        for group in temp: result.append(group)
-
     x = a.transpose()
+    # for row in a:
+    #     temp = rollingWindow(row, 4)
+    #     for group in temp: result.append(group)
 
-    for row in x:
-        temp = rollingWindow(row, 4)
-        for group in temp: result.append(group)
+    
+
+    # for row in x:
+    #     temp = rollingWindow(row, 4)
+    #     for group in temp: result.append(group)
+
+    for i in range(len(a)):
+        tempA = rollingWindow(a[i], 4)
+        for groupA in tempA: result.append(groupA)
+
+        tempX = rollingWindow(x[i], 4)
+        for groupX in tempX: result.append(groupX)
     return result
 
 def splitDiagonal(a):
@@ -43,7 +51,7 @@ def runSplitDiagonal(a):
 runSplitHV(matrix)
 runSplitDiagonal(matrix)
 
-# stop = timeit.default_timer()
+stop = timeit.default_timer()
 # # print('Time: ', stop - start)  
 
 

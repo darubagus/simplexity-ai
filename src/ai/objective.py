@@ -1,4 +1,5 @@
 import pickle
+import timeit
 from typing import Tuple
 from src.model import Player
 from src.model import Piece, Board, State
@@ -17,17 +18,24 @@ def objective(_state : State):
     states = {}
 
     player = _state.players[(_state.round) % 2]
+
     board = np.array(_state.board.board)
     arrays += runSplitHV(board)
     arrays += runSplitDiagonal(board)
+ 
     # print(len(arrays))
-
+    
     for window in arrays:
         checkWindow(window, states)
-    
+
     return countStateValue(states, player)
 
 def checkWindow(_window, _states):
+    # start = timeit.default_timer()
+
+    # global ctr
+    # ctr +=1
+    
     colors = ["BLUE", "RED", "BLACK"]
     shapes = ["X", "O", "-"]
     for color in colors:
@@ -55,6 +63,9 @@ def checkWindow(_window, _states):
             _states[shape+str(counter)] = 0
         if (counter + counter_blank == 4):
             _states[shape+str(counter)] += 1
+    
+    # stop = timeit.default_timer()
+    # print('Time: ', stop - start) 
     # print(_states)
 
 def countStateValue(_state, _player):
@@ -72,6 +83,7 @@ def countStateValue(_state, _player):
     player_shape = _player.shape
     player_color = _player.color
     total = 0
+    end = False
     
     for key in _state:
         if (key[:-1] in valid_colors and key[-1] != "0"):
@@ -111,8 +123,11 @@ def countStateValue(_state, _player):
                     total += weights[weight_key] * (_state["O" + cweight])
                 else:
                     total += weights[weight_key] * (_state["O" + cweight] - _state["X" + cweight])
+    end = (player_shape + "4" in key) or (player_color + "4" in key)
+    if (end): print(key)
+
     print(_state, total)
-    return total
+    return (total, end)
     
 # print(np.array(board))
 

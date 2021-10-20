@@ -16,6 +16,7 @@ class Minimax:
 
     def find(self, state: State, n_player: int, thinking_time: float):
         self.thinking_time = time() + thinking_time
+        ctr = 0
 
         result = self.minimax(state, 3, float("-inf"), float("inf"), True)
         
@@ -27,11 +28,12 @@ class Minimax:
 
     def generatePossibleMoves(self, state: State):
         currentPlayer = (state.round-1) % 2
+        playerShape = state.players[currentPlayer].shape
         xValidity = state.players[currentPlayer].quota["X"] > 0
         oValidity = state.players[currentPlayer].quota["O"] > 0
 
         arrOfSuccStates = []
-        if (xValidity):
+        if (xValidity and (playerShape == "X" or (not oValidity))):
             for i in range(state.board.col):
                 boardCp = Board(state.board.row, state.board.col)
                 boardCp.board = copy.deepcopy(state.board.board)
@@ -42,7 +44,7 @@ class Minimax:
                 if (placementSucc != -1):
                     arrOfSuccStates.append((stateCp, i, ShapeConstant.CROSS))
 
-        if (oValidity):
+        if (oValidity and (playerShape == "O" or (not xValidity))):
             for i in range(state.board.col):
                 boardCp = Board(state.board.row, state.board.col)
                 boardCp.board = copy.deepcopy(state.board.board)
@@ -64,9 +66,13 @@ class Minimax:
         playersCp = copy.deepcopy(state.players)
         stateCp = State(boardCp, playersCp, state.round)
 
-        if (depth == 0):
-            # print(objective(state))
-            return (objective(state), (0, "-"))
+        result = objective(state)
+        score = result[0]
+        win = result[1]
+        if (depth == 0 or win):
+            if (win and depth != 0):
+                return (float("inf"), (0, "-"))
+            return (score, (0, "-"))
         
         successorStates = self.generatePossibleMoves(stateCp)
         if (maximizing):
