@@ -10,7 +10,6 @@ from src.utility import place
 
 from typing import Tuple, List
 
-# Namanya jadi LocalSearchGroup53
 class LocalSearchGroup53:
     def __init__(self):
         pass
@@ -18,7 +17,7 @@ class LocalSearchGroup53:
     def find(self, state: State, n_player: int, thinking_time: float) -> Tuple[str, str]:
         self.thinking_time = time() + thinking_time
 
-        result = self.sidewaysHillClimb(state, n_player)
+        result = self.sidewaysHillClimb(state)
         best_movement = (result[1][0], result[1][1])
 
         return best_movement
@@ -54,8 +53,8 @@ class LocalSearchGroup53:
             arrOfSuccStates = arrOfSuccStates[::-1]
         return arrOfSuccStates      
 
-    def sidewaysHillClimb(self, state: State, n_player):
-        maxScore = objective(state, n_player)[0]
+    def sidewaysHillClimb(self, state: State):
+        maxScore = objective(state)
         neighbor = (copy.deepcopy(state), random.randint(0, state.board.col), random.choice([ShapeConstant.CROSS, ShapeConstant.CIRCLE]))
         backupNeighbor = (copy.deepcopy(state), random.randint(0, state.board.col), random.choice([ShapeConstant.CROSS, ShapeConstant.CIRCLE]))
         nonCurrentHighest = float("-inf")
@@ -64,7 +63,7 @@ class LocalSearchGroup53:
         successors = self.generatePossibleMoves(state)
 
         for successor in successors:
-            currentScore = objective(successor[0], n_player)[0]
+            currentScore = objective(successor[0])
             if (maxScore <= currentScore):
                 maxScore = currentScore
                 neighbor = successor
@@ -78,7 +77,7 @@ class LocalSearchGroup53:
         else:
             return (nonCurrentHighest, (backupNeighbor[1], backupNeighbor[2]))
 
-def objective(_state : State, n_player: int):
+def objective(_state : State):
     """
     
     """
@@ -86,25 +85,18 @@ def objective(_state : State, n_player: int):
     arrays = []
     states = {}
 
-    player = _state.players[n_player]
-
+    player = _state.players[(_state.round) % 2]
     board = np.array(_state.board.board)
     arrays += runSplitHV(board)
     arrays += runSplitDiagonal(board)
- 
-    # print(len(arrays))
-    
+    print(len(arrays))
+
     for window in arrays:
         checkWindow(window, states)
-
+    
     return countStateValue(states, player)
 
 def checkWindow(_window, _states):
-    # start = timeit.default_timer()
-
-    # global ctr
-    # ctr +=1
-    
     colors = ["BLUE", "RED", "BLACK"]
     shapes = ["X", "O", "-"]
     for color in colors:
@@ -132,27 +124,23 @@ def checkWindow(_window, _states):
             _states[shape+str(counter)] = 0
         if (counter + counter_blank == 4):
             _states[shape+str(counter)] += 1
-    
-    # stop = timeit.default_timer()
-    # print('Time: ', stop - start) 
     # print(_states)
 
 def countStateValue(_state, _player):
     valid_colors = ["BLUE", "RED"]
     valid_shapes = ["X", "O"]
     weights = {
-        "SHAPE1":5,
+        "SHAPE1":1,
         "SHAPE2":10,
-        "SHAPE3":30,
+        "SHAPE3":50,
         "SHAPE4":1000,
         "COLOR1":1,
         "COLOR2":7,
-        "COLOR3":20,
-        "COLOR4":1000 }
+        "COLOR3":30,
+        "COLOR4":1000}
     player_shape = _player.shape
     player_color = _player.color
     total = 0
-    end = False
     
     for key in _state:
         if (key[:-1] in valid_colors and key[-1] != "0"):
@@ -192,17 +180,11 @@ def countStateValue(_state, _player):
                     total += weights[weight_key] * (_state["O" + cweight])
                 else:
                     total += weights[weight_key] * (_state["O" + cweight] - _state["X" + cweight])
-    end = (player_shape + "4" in key) or (player_color + "4" in key)
-    if (end): print(key)
-
     print(_state, total)
-    return (total, end)
+    return total
 
-#Your statements here
-# start = timeit.default_timer()
-
-# matrix = np.arange(42).reshape(6, 7)
-# print(matrix)
+matrix = np.arange(42).reshape(6, 7)
+print(matrix)
 
 def rollingWindow(a, window_size):
     shape = (a.shape[0] - window_size + 1, window_size) + a.shape[1:]
@@ -211,23 +193,15 @@ def rollingWindow(a, window_size):
 
 def runSplitHV(a):
     result = []
+    for row in a:
+        temp = rollingWindow(row, 4)
+        for group in temp: result.append(group)
+
     x = a.transpose()
-    # for row in a:
-    #     temp = rollingWindow(row, 4)
-    #     for group in temp: result.append(group)
 
-    
-
-    # for row in x:
-    #     temp = rollingWindow(row, 4)
-    #     for group in temp: result.append(group)
-
-    for i in range(len(a)):
-        tempA = rollingWindow(a[i], 4)
-        for groupA in tempA: result.append(groupA)
-
-        tempX = rollingWindow(x[i], 4)
-        for groupX in tempX: result.append(groupX)
+    for row in x:
+        temp = rollingWindow(row, 4)
+        for group in temp: result.append(group)
     return result
 
 def splitDiagonal(a):
@@ -244,8 +218,4 @@ def splitDiagonal(a):
 def runSplitDiagonal(a):
     flipped = np.fliplr(a)
     return (splitDiagonal(a) + splitDiagonal(flipped))
-            
-            
-        
-
         
